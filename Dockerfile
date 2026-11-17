@@ -1,33 +1,51 @@
-# Start with a small official Python image
-FROM python:3.12-slim
 
-# Keep Python output visible in container logs and avoid .pyc files
+# ==========================================
+# STAGE 1: BUILDER
+# ==========================================
+FROM python:3.12-slim AS builder
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Set the application directory
+WORKDIR /build
+
+# Copy dependency file
+COPY requirements.txt .
+
+# Install dependencies into a separate directory
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+
+# ==========================================
+# STAGE 2: RUNTIME
+# ==========================================
+FROM python:3.12-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Install dependencies first to improve Docker layer caching
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy dependencies from builder stage
+COPY --from=builder /install /usr/local
 
-# Copy the application source
+# Copy application files
 COPY app.py .
 COPY templates/ ./templates/
 COPY static/ ./static/
 
-# Run as a non-root user
+# Create a non-root user
 RUN useradd --create-home --shell /usr/sbin/nologin appuser \
     && chown -R appuser:appuser /app
+
 USER appuser
 
-# Document the port used by the application
+# Application port
 EXPOSE 5000
 
-# Container health check
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=2)"
 
-# Use Gunicorn as the production WSGI server
+# Start application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--access-logfile", "-", "app:app"]
