@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="A polished two-player Tic Tac Toe game.">
+  <title>Aviz Academy | Tic Tac Toe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Aviz Academy home">
+        <img class="brand-logo" src="{{ url_for('static', filename='avizacademy-logo.png') }}" alt="Aviz Academy">
+      </a>
+      <div class="topbar-note"><span class="live-dot"></span> LOCAL TWO-PLAYER</div>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow"><span class="eyebrow-line"></span> THE CLASSIC, REIMAGINED</div>
+      <h1>Make your <span>move.</span></h1>
+      <p class="subtitle">A little strategy. A little rivalry. Take turns and claim the grid.</p>
+    </section>
+
+    <section class="game-layout" aria-label="Tic Tac Toe game">
+      <aside class="score-panel panel">
+        <div class="panel-heading">
+          <span class="section-label">MATCH SCORE</span>
+          <span class="score-icon">↗</span>
+        </div>
+        <div class="score-row">
+          <div class="player-meta">
+            <span class="player-symbol x-symbol">X</span>
+            <div><strong>Player X</strong><small>First move</small></div>
+          </div>
+          <strong class="score-value" id="scoreX">0</strong>
+        </div>
+        <div class="score-divider"></div>
+        <div class="score-row">
+          <div class="player-meta">
+            <span class="player-symbol o-symbol">O</span>
+            <div><strong>Player O</strong><small>Second move</small></div>
+          </div>
+          <strong class="score-value" id="scoreO">0</strong>
+        </div>
+        <div class="score-divider"></div>
+        <div class="score-row draw-row">
+          <div class="player-meta">
+            <span class="draw-symbol">＝</span>
+            <div><strong>Draws</strong><small>No winner this round</small></div>
+          </div>
+          <strong class="score-value" id="scoreDraw">0</strong>
+        </div>
+        <p class="score-footnote">Scores stay in this browser tab until refreshed.</p>
+      </aside>
+
+      <section class="board-panel panel">
+        <div class="game-status">
+          <div>
+            <span class="section-label">CURRENT TURN</span>
+            <div class="turn-display" id="turnDisplay"><span class="turn-token x-token">X</span><strong>Player X's turn</strong></div>
+          </div>
+          <span class="round-pill" id="roundLabel">ROUND 01</span>
+        </div>
+
+        <div class="board" id="board" role="group" aria-label="Tic Tac Toe board">
+          <button class="cell" data-index="0" aria-label="Row 1, column 1"></button>
+          <button class="cell" data-index="1" aria-label="Row 1, column 2"></button>
+          <button class="cell" data-index="2" aria-label="Row 1, column 3"></button>
+          <button class="cell" data-index="3" aria-label="Row 2, column 1"></button>
+          <button class="cell" data-index="4" aria-label="Row 2, column 2"></button>
+          <button class="cell" data-index="5" aria-label="Row 2, column 3"></button>
+          <button class="cell" data-index="6" aria-label="Row 3, column 1"></button>
+          <button class="cell" data-index="7" aria-label="Row 3, column 2"></button>
+          <button class="cell" data-index="8" aria-label="Row 3, column 3"></button>
+        </div>
+
+        <div class="board-footer">
+          <span><span class="hint-dot"></span> Select an empty square to play</span>
+          <span id="movesCount">0 / 9 MOVES</span>
+        </div>
+      </section>
+    </section>
+
+    <section class="action-row">
+      <button class="primary-button" id="newGameBtn"><span>↻</span> New game</button>
+      <button class="secondary-button" id="resetBtn">Reset scores</button>
+    </section>
+    <p class="keyboard-hint">GOOD GAMES ARE WON ONE MOVE AT A TIME.</p>
+    <footer><span>AVIZ ACADEMY</span><span>BUILT FOR FRIENDLY COMPETITION</span></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
